@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+
+const API = 'https://waleedvetcare-backend-production.up.railway.app';
 
 export default function AdminInventory() {
   const { admin }  = useAuth();
@@ -13,24 +15,24 @@ export default function AdminInventory() {
 
   const headers = { headers: { Authorization: `Bearer ${admin?.token}` } };
 
+  const fetchRecords = useCallback(() => {
+    axios.get(`${API}/api/inventory`, headers).then(r => setRecords(r.data));
+  }, [admin]);
+
   useEffect(() => {
-    useEffect(() => {
     if (!admin) return navigate('/admin/login');
-    axios.get('https://waleedvetcare-backend-production.up.railway.app/api/products').then(r => setProducts(r.data));
+    axios.get(`${API}/api/products`).then(r => setProducts(r.data));
     fetchRecords();
   }, [admin, navigate, fetchRecords]);
-
-  const fetchRecords = () =>
-    axios.get('https://waleedvetcare-backend-production.up.railway.app/api/inventory', headers).then(r => setRecords(r.data));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://waleedvetcare-backend-production.up.railway.app/api/inventory', form, headers);
+      await axios.post(`${API}/api/inventory`, form, headers);
       setMessage('Inventory updated!');
       setForm({ product:'', type:'stock_in', quantity:'', note:'' });
       fetchRecords();
-      axios.get('https://waleedvetcare-backend-production.up.railway.app/api/products').then(r => setProducts(r.data));
+      axios.get(`${API}/api/products`).then(r => setProducts(r.data));
     } catch { setMessage('Error updating inventory'); }
   };
 
