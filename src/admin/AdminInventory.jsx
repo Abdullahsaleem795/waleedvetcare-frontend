@@ -14,10 +14,11 @@ export default function AdminInventory() {
   const headers = { headers: { Authorization: `Bearer ${admin?.token}` } };
 
   useEffect(() => {
+    useEffect(() => {
     if (!admin) return navigate('/admin/login');
     axios.get('https://waleedvetcare-backend-production.up.railway.app/api/products').then(r => setProducts(r.data));
     fetchRecords();
-  }, [admin, navigate]);
+  }, [admin, navigate, fetchRecords]);
 
   const fetchRecords = () =>
     axios.get('https://waleedvetcare-backend-production.up.railway.app/api/inventory', headers).then(r => setRecords(r.data));
