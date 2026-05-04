@@ -17,7 +17,7 @@ export default function AdminInventory() {
     if (!admin) return navigate('/admin/login');
     axios.get('https://waleedvetcare-backend-production.up.railway.app/api/products').then(r => setProducts(r.data));
     fetchRecords();
-  }, [admin]);
+  }, [admin, navigate]);
 
   const fetchRecords = () =>
     axios.get('https://waleedvetcare-backend-production.up.railway.app/api/inventory', headers).then(r => setRecords(r.data));

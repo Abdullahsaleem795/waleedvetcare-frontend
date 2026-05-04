@@ -12,8 +12,7 @@ export default function AdminOrders() {
     if (!admin) return navigate('/admin/login');
     axios.get('https://waleedvetcare-backend-production.up.railway.app/api/orders', { headers: { Authorization: `Bearer ${admin.token}` } })
       .then(r => setOrders(r.data));
-  }, [admin]);
-
+  }, [admin, navigate]);
   const updateStatus = async (id, status) => {
     await axios.put(`https://waleedvetcare-backend-production.up.railway.app/api/orders/${id}/status`, { status }, { headers: { Authorization: `Bearer ${admin.token}` } });
     setOrders(prev => prev.map(o => o._id === id ? { ...o, status } : o));

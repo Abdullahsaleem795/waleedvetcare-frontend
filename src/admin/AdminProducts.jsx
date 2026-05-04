@@ -17,8 +17,7 @@ export default function AdminProducts() {
   useEffect(() => {
     if (!admin) return navigate('/admin/login');
     fetchProducts();
-  }, [admin]);
-
+  }, [admin, navigate]);
   const fetchProducts = () => axios.get('https://waleedvetcare-backend-production.up.railway.app/api/products').then(r => setProducts(r.data));
 
   const handleSubmit = async (e) => {

@@ -9,13 +9,11 @@ export default function AdminDashboard() {
   const [stats,  setStats]  = useState({});
 
   useEffect(() => {
-  if (!admin) return navigate('/admin/login');
-  axios.get('https://waleedvetcare-backend-production.up.railway.app/api/orders/stats', {
-    headers: { Authorization: `Bearer ${admin.token}` }
-  })
-  .then(r => setStats(r.data))
-  .catch(() => {});
-}, [admin, navigate]);   // 👈 yahan add karo
+    if (!admin) return navigate('/admin/login');
+    axios.get('https://waleedvetcare-backend-production.up.railway.app/api/orders/stats', {
+      headers: { Authorization: `Bearer ${admin.token}` }
+    }).then(r => setStats(r.data)).catch(() => {});
+  }, [admin, navigate]);   // 👈 yahan add karo
 
   return (
     <div className="admin-layout">

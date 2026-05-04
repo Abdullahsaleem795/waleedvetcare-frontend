@@ -12,8 +12,9 @@ export default function ProductDetail() {
   const API           = 'https://waleedvetcare-backend-production.up.railway.app';
 
   useEffect(() => {
-    axios.get(`${API}/api/products/${id}`).then(r => setProduct(r.data)).catch(() => navigate('/'));
-  }, [id]);
+    axios.get(`https://waleedvetcare-backend-production.up.railway.app/api/products/${id}`)
+    .then(r => setProduct(r.data)).catch(() => navigate('/'));
+  }, [id, navigate]);
 
   if (!product) return <div className="loading">Loading product...</div>;
 
