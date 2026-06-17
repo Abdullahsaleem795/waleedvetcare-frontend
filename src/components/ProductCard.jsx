@@ -1,17 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { API_URL } from '../utils/api';
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
   const navigate      = useNavigate();
-  const API           = 'https://waleedvetcare-backend-production.up.railway.app';
 
   return (
     <div className="product-card">
       <div className="product-card-img">
         {product.image
-          ? <img src={`${API}${product.image}`} alt={product.name} />
+          ? <img src={`${API_URL}${product.image}`} alt={product.name} />
           : <span>{product.category === 'vaccine' ? '💉' : product.category === 'supplement' ? '🧪' : '💊'}</span>
         }
       </div>

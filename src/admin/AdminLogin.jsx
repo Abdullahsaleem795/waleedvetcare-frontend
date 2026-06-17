@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function AdminLogin() {
@@ -12,7 +12,7 @@ export default function AdminLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault(); setError('');
     try {
-      const { data } = await axios.post('https://waleedvetcare-backend-production.up.railway.app/api/auth/admin/login', form);
+      const { data } = await API.post('/api/auth/admin/login', form);
       loginAdmin(data);
       navigate('/admin');
     } catch (err) {

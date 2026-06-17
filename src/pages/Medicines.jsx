@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import API from '../utils/api';
 import ProductCard from '../components/ProductCard';
 
 export default function Medicines() {
@@ -7,7 +7,7 @@ export default function Medicines() {
   const [loading,  setLoading]  = useState(true);
 
   useEffect(() => {
-    axios.get('https://waleedvetcare-backend-production.up.railway.app/api/products?category=medicine')
+    API.get('/api/products?category=medicine')
       .then(r => { setProducts(r.data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);

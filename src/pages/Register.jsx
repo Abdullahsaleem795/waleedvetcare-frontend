@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function Register() {
@@ -12,7 +12,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault(); setError('');
     try {
-      const { data } = await axios.post('https://waleedvetcare-backend-production.up.railway.app/api/auth/register', form);
+      const { data } = await API.post('/api/auth/register', form);
       loginUser(data);
       navigate('/');
     } catch (err) {

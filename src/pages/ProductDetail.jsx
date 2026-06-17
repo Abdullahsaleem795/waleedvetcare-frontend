@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API, { API_URL } from '../utils/api';
 import { useCart } from '../context/CartContext';
 
 export default function ProductDetail() {
@@ -9,10 +9,8 @@ export default function ProductDetail() {
   const [qty,     setQty]     = useState(1);
   const { addToCart } = useCart();
   const navigate      = useNavigate();
-  const API           = 'https://waleedvetcare-backend-production.up.railway.app';
-
   useEffect(() => {
-    axios.get(`https://waleedvetcare-backend-production.up.railway.app/api/products/${id}`)
+    API.get(`/api/products/${id}`)
     .then(r => setProduct(r.data)).catch(() => navigate('/'));
   }, [id, navigate]);
 
@@ -29,7 +27,7 @@ export default function ProductDetail() {
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'48px',alignItems:'start'}}>
           <div style={{background:'linear-gradient(135deg,#e8f5ee,#d4ede0)',borderRadius:'var(--radius)',height:'400px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'8rem'}}>
             {product.image
-              ? <img src={`${API}${product.image}`} alt={product.name} style={{width:'100%',height:'100%',objectFit:'cover',borderRadius:'var(--radius)'}} />
+              ? <img src={`${API_URL}${product.image}`} alt={product.name} style={{width:'100%',height:'100%',objectFit:'cover',borderRadius:'var(--radius)'}} />
               : <span>{product.category === 'vaccine' ? '💉' : '💊'}</span>
             }
           </div>

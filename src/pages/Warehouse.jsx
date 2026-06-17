@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import API from '../utils/api';
 
 export default function Warehouse() {
   const [lowStock, setLowStock] = useState([]);
@@ -7,7 +7,7 @@ export default function Warehouse() {
   useEffect(() => {
     const admin = JSON.parse(localStorage.getItem('admin') || 'null');
     if (!admin) return;
-    axios.get('https://waleedvetcare-backend-production.up.railway.app/api/inventory/lowstock', {
+    API.get('/api/inventory/lowstock', {
       headers: { Authorization: `Bearer ${admin.token}` }
     }).then(r => setLowStock(r.data)).catch(() => {});
   }, []);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function AdminOrders() {
@@ -10,11 +10,11 @@ export default function AdminOrders() {
 
   useEffect(() => {
     if (!admin) return navigate('/admin/login');
-    axios.get('https://waleedvetcare-backend-production.up.railway.app/api/orders', { headers: { Authorization: `Bearer ${admin.token}` } })
+    API.get('/api/orders', { headers: { Authorization: `Bearer ${admin.token}` } })
       .then(r => setOrders(r.data));
   }, [admin, navigate]);
   const updateStatus = async (id, status) => {
-    await axios.put(`https://waleedvetcare-backend-production.up.railway.app/api/orders/${id}/status`, { status }, { headers: { Authorization: `Bearer ${admin.token}` } });
+    await API.put(`/api/orders/${id}/status`, { status }, { headers: { Authorization: `Bearer ${admin.token}` } });
     setOrders(prev => prev.map(o => o._id === id ? { ...o, status } : o));
   };
 

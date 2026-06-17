@@ -1,33 +1,100 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../utils/api';
 import ProductCard from '../components/ProductCard';
 
-const API = 'https://waleedvetcare-backend-production.up.railway.app/api';
+const HERO_WORDS = ['Medicines', 'Vaccines', 'Supplements', 'Care Products'];
 
 export default function Home() {
   const [featured, setFeatured] = useState([]);
+  const [wordIdx, setWordIdx] = useState(0);
+  const [displayWord, setDisplayWord] = useState('');
+  const [typing, setTyping] = useState(true);
   const navigate = useNavigate();
 
+  // Typing effect
   useEffect(() => {
-    axios.get(`${API}/products`).then(r => setFeatured(r.data.slice(0, 8))).catch(() => {});
+    const word = HERO_WORDS[wordIdx];
+    let timeout;
+    if (typing) {
+      if (displayWord.length < word.length) {
+        timeout = setTimeout(() => setDisplayWord(word.slice(0, displayWord.length + 1)), 80);
+      } else {
+        timeout = setTimeout(() => setTyping(false), 1500);
+      }
+    } else {
+      if (displayWord.length > 0) {
+        timeout = setTimeout(() => setDisplayWord(displayWord.slice(0, -1)), 50);
+      } else {
+        setWordIdx((wordIdx + 1) % HERO_WORDS.length);
+        setTyping(true);
+      }
+    }
+    return () => clearTimeout(timeout);
+  }, [displayWord, typing, wordIdx]);
+
+  useEffect(() => {
+    API.get('/api/products').then(r => setFeatured(r.data.slice(0, 8))).catch(() => {});
+
+    // Particles
+    const container = document.getElementById('heroParticles');
+    if (container) {
+      for (let i = 0; i < 18; i++) {
+        const p = document.createElement('div');
+        const s = Math.random() * 60 + 10;
+        p.style.cssText = `
+          position:absolute;
+          border-radius:50%;
+          background:rgba(255,255,255,0.05);
+          width:${s}px;height:${s}px;
+          left:${Math.random() * 100}%;
+          animation:particleFloat ${Math.random() * 15 + 10}s linear ${Math.random() * 10}s infinite;
+        `;
+        container.appendChild(p);
+      }
+    }
   }, []);
 
   return (
     <div>
+      {/* HERO */}
       <section className="hero">
+        <div className="hero-particles" id="heroParticles"></div>
+        <div className="hero-orb orb1"></div>
+        <div className="hero-orb orb2"></div>
         <div className="hero-content">
-          <div className="hero-badge">🏆 Pakistan's #1 Poultry Health Store</div>
-          <h1>Premium Poultry <span>Medicines</span> & Vaccines</h1>
-          <p>Trusted by 10,000+ poultry farmers across Pakistan.</p>
+          <div className="hero-badge">
+            <span className="badge-dot"></span>
+            Pakistan's #1 Poultry Health Store
+          </div>
+          <h1>
+            Premium Poultry<br/>
+            <span className="typing-word">
+              {displayWord}<span className="cursor">|</span>
+            </span>
+          </h1>
+          <p>Trusted by 10,000+ poultry farmers across Pakistan.<br/>Authentic products, fast delivery, expert support.</p>
           <div className="hero-buttons">
             <button className="btn-primary" onClick={() => navigate('/medicines')}>💊 Shop Medicines</button>
             <button className="btn-outline" onClick={() => navigate('/vaccines')}>💉 Vaccines</button>
             <button className="btn-outline" onClick={() => navigate('/cart')}>🛒 View Cart</button>
           </div>
+          <div className="hero-stats">
+            {[['10K+','Happy Farmers'],['500+','Products'],['98%','Authentic'],['24hr','Fast Delivery']].map(([n,l]) => (
+              <div key={l} className="hero-stat-pill">
+                <div className="stat-num">{n}</div>
+                <div className="stat-lbl">{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="scroll-hint">
+          <span>Scroll</span>
+          <div className="scroll-arrow"></div>
         </div>
       </section>
 
+      {/* STATS BAR */}
       <section style={{background:'white',padding:'40px 0',borderBottom:'1px solid #e2ebe6'}}>
         <div className="container" style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(150px,1fr))',gap:'20px',textAlign:'center'}}>
           {[['10,000+','Happy Farmers'],['500+','Products'],['98%','Authentic'],['24hr','Fast Delivery']].map(([num,label]) => (
@@ -39,6 +106,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CATEGORIES */}
       <section className="section" style={{background:'var(--bg)'}}>
         <div className="container">
           <div className="section-title">
@@ -67,6 +135,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FEATURED PRODUCTS */}
       <section className="section" style={{background:'white'}}>
         <div className="container">
           <div className="section-title">
@@ -81,6 +150,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CTA */}
       <section className="section" style={{background:'var(--primary)',color:'white',textAlign:'center'}}>
         <div className="container">
           <h2 style={{fontSize:'2rem',marginBottom:'12px',color:'white'}}>Need Expert Advice?</h2>

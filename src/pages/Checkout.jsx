@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../utils/api';
 import { useCart } from '../context/CartContext';
 
 export default function Checkout() {
@@ -61,7 +61,7 @@ export default function Checkout() {
           ? { senderNumber, transactionId }
           : {},
       };
-      const { data } = await axios.post('https://waleedvetcare-backend-production.up.railway.app/api/orders', orderData);
+      const { data } = await API.post('/api/orders', orderData);
       clearCart();
       navigate(`/invoice/${data._id}`);
     } catch (e) {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function AdminProducts() {
@@ -18,7 +18,7 @@ export default function AdminProducts() {
     if (!admin) return navigate('/admin/login');
     fetchProducts();
   }, [admin, navigate]);
-  const fetchProducts = () => axios.get('https://waleedvetcare-backend-production.up.railway.app/api/products').then(r => setProducts(r.data));
+  const fetchProducts = () => API.get('/api/products').then(r => setProducts(r.data));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,10 +27,10 @@ export default function AdminProducts() {
     if (image) fd.append('image', image);
     try {
       if (editId) {
-        await axios.put(`https://waleedvetcare-backend-production.up.railway.app/api/products/${editId}`, fd, headers);
+        await API.put(`/api/products/${editId}`, fd, headers);
         setMessage('Product updated!'); setEditId(null);
       } else {
-        await axios.post('https://waleedvetcare-backend-production.up.railway.app/api/products', fd, headers);
+        await API.post('/api/products', fd, headers);
         setMessage('Product added!');
       }
       setForm({ name:'', category:'medicine', price:'', description:'', benefits:'', usage:'', stock:'' });
@@ -40,7 +40,7 @@ export default function AdminProducts() {
   };
 
   const handleEdit   = (p) => { setForm({name:p.name,category:p.category,price:p.price,description:p.description,benefits:p.benefits||'',usage:p.usage||'',stock:p.stock}); setEditId(p._id); window.scrollTo(0,0); };
-  const handleDelete = async (id) => { if (!window.confirm('Delete?')) return; await axios.delete(`https://waleedvetcare-backend-production.up.railway.app/api/products/${id}`, headers); fetchProducts(); };
+  const handleDelete = async (id) => { if (!window.confirm('Delete?')) return; await API.delete(`/api/products/${id}`, headers); fetchProducts(); };
 
   return (
     <div className="admin-layout">

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import API from '../utils/api';
 
 export default function Invoice() {
   const { id }    = useParams();
   const [order, setOrder] = useState(null);
 
   useEffect(() => {
-    axios.get(`https://waleedvetcare-backend-production.up.railway.app/api/orders/${id}`).then(r => setOrder(r.data)).catch(() => {});
+    API.get(`/api/orders/${id}`).then(r => setOrder(r.data)).catch(() => {});
   }, [id]);
 
   if (!order) return <div className="loading">Loading invoice...</div>;
